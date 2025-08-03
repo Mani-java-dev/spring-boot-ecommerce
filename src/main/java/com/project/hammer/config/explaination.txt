@@ -1,0 +1,53 @@
++-------------------+       +---------------------+       +-----------------------+
+|  Incoming Request | ----> | Security FilterChain| ----> |   Your Controller     |
+| (with/without JWT)|       | (Checks Auth Token) |       | (e.g., /api/secret)   |
++-------------------+       +---------------------+       +-----------------------+
+                                 |
+                                 v
+                       +--------------------+
+                       |  AuthenticationMgr |
+                       |  (verifies token)  |
+                       +--------------------+
+                                 |
+                    +------------+-------------+
+                    |                          |
+              Valid Token                  Invalid Token
+                    |                          |
+              Proceed to API          Reject (403/401 Error)
+
+
+
+
+
+
+
+
+
+
+          ┌────────────────────────┐
+          │  Frontend (React, etc) │
+          └────────────┬───────────┘
+                       │
+                [GET /api/secret]
+                       │
+                       ▼
+         ┌───────────────────────────────┐
+         │ Spring Security Filter Chain  │ ◄── (Your config in `SecurityConfig`)
+         └─────┬───────────────┬─────────┘
+               │               │
+   No JWT ► 401/403     JWT Found? Yes ►
+               │               ▼
+         ┌────────────────────────────┐
+         │ JwtAuthenticationFilter    │ ◄── (Extracts + Validates JWT)
+         └────────────┬──────────────┘
+                      ▼
+       ┌──────────────────────────────────┐
+       │ CustomUserDetailsService         │ ◄── (Loads user info from DB)
+       └──────────────────────────────────┘
+                      ▼
+              Valid ► Proceed
+                      ▼
+        ┌──────────────────────────────┐
+        │ YourController (/api/secret) │
+        └──────────────────────────────┘
+
