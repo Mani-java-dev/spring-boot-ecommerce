@@ -55,7 +55,7 @@ public class RateLimitConfiguration {
 
 
 
-    // Define rate limit: 10 requests per minute
+    //10 requests per minute
     private static Bucket createNewBucket() {
         return Bucket.builder()
                 .addLimit(Bandwidth.classic(10, Refill.intervally(10, Duration.ofMinutes(1))))
@@ -65,6 +65,6 @@ public class RateLimitConfiguration {
     public static boolean allowRequest(String clientId, String requestPath) {
         String key = clientId + ":" + requestPath;
         Bucket bucket = buckets.computeIfAbsent(key, k -> createNewBucket());
-        return bucket.tryConsume(1);  // Try consuming a token
+        return bucket.tryConsume(1); 
     }
 }
