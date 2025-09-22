@@ -58,6 +58,9 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductResponse> getAllProducts() {
         List<Product> allProducts= productRepo.getAllProducts();
 
+        Optional<Product> products=productRepo.findById(1);
+        products.ifPresent(value -> productRepo.delete(value));
+
         return allProducts.stream().map(
                 product -> ProductResponse
                 .builder()
@@ -88,4 +91,6 @@ public class ProductServiceImpl implements ProductService {
 
         return "Product updated successfully";
     }
+
+
 }

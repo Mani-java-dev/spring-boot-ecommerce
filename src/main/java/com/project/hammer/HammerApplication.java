@@ -1,10 +1,13 @@
 package com.project.hammer;
 
+import com.project.hammer.entity.Product;
 import com.project.hammer.model.LoginModel;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import com.project.hammer.repository.*;
 
 import javax.swing.text.html.Option;
 import java.util.*;
@@ -14,9 +17,13 @@ import java.util.stream.Collectors;
 @SpringBootApplication
 public class HammerApplication {
 
+
+
 	public static void main(String[] args) {
 
 		SpringApplication.run(HammerApplication.class, args);
+
+
 
 	}
 

@@ -31,7 +31,7 @@ public class SecurityConfig {
     @Autowired
     private JwtFilter jwtFilter;
 
-    public final String[] WHITELISTENDPOINTS = {
+    public final static String[] WHITELISTENDPOINTS = {
             "/v3/api-docs/**",
             "/swagger-ui.html",
             "/swagger-ui/**",
@@ -47,7 +47,7 @@ public class SecurityConfig {
     };
 
     public final String[] SUPERADMINENDPOINTS = {
-            "/products/",
+            "/products/**",
             "/category/",
             "/hammer/v1/api/all/users",
     };
@@ -57,8 +57,8 @@ public class SecurityConfig {
         httpSecurity.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(WHITELISTENDPOINTS).permitAll()
+                                .requestMatchers(SUPERADMINENDPOINTS).hasRole("ADMIN")
                                 .requestMatchers(USERENDPOINTS).hasRole("USER")
-                                .requestMatchers(SUPERADMINENDPOINTS).hasRole("SUPERADMIN")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sesssion ->

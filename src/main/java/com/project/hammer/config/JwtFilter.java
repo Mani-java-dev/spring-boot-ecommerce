@@ -1,13 +1,11 @@
 package com.project.hammer.config;
 
-import com.project.hammer.exceptions.BadRequestCustomException;
 import com.project.hammer.serviceimpl.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,6 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = null;
         String userName = null;
 
+        RateLimitConfiguration.performRateLimiting(request, SecurityConfig.WHITELISTENDPOINTS);
 
         if (Objects.nonNull(requestTokenHeader) && requestTokenHeader.startsWith("Bearer")) {
 
@@ -46,11 +45,11 @@ public class JwtFilter extends OncePerRequestFilter {
             try {
                 userName = jwtUtil.extractUsername(token);
             } catch (IllegalArgumentException e) {
-                System.out.println("Unable to get JWT Token");
+                log.warn("Unable to get JWT Token");
             }
 
         } else {
-              log.info("token not found");
+            log.info("token not found");
 //            throw new BadRequestCustomException("Token not found !");
         }
 
