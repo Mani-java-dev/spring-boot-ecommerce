@@ -15,4 +15,6 @@ public interface ProductService {
     List<ProductResponse> getAllProducts();
 
     String updateProduct(NewProductModel newProductModel);
+
+    String deleteProduct(String productId);
 }

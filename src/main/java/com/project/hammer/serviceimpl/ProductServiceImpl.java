@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +42,7 @@ public class ProductServiceImpl implements ProductService {
                 throw new BadRequestCustomException("Product already exist please give different name");
             }
             Product newProduct = new Product();
+            newProduct.setProductId(UUID.randomUUID().toString());
             newProduct.setProductName(productModel.getProductName());
             newProduct.setDescription(productModel.getDescription());
             newProduct.setPrice(productModel.getPrice());
@@ -57,13 +60,10 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public List<ProductResponse> getAllProducts() {
         List<Product> allProducts= productRepo.getAllProducts();
-
-        Optional<Product> products=productRepo.findById(1);
-        products.ifPresent(value -> productRepo.delete(value));
-
         return allProducts.stream().map(
                 product -> ProductResponse
                 .builder()
+                        .productId(product.getProductId())
                 .productName(product.getProductName())
                 .description(product.getDescription())
                         .isActive(product.getIsActive())
@@ -90,6 +90,17 @@ public class ProductServiceImpl implements ProductService {
         productRepo.save(product);
 
         return "Product updated successfully";
+    }
+
+    @Override
+    public String deleteProduct(String productId) {
+        Optional<Product> product=productRepo.findByProductId(productId.trim());
+        if(!product.isPresent()){
+            throw new BadRequestCustomException("product not found !");
+        }
+        product.get().setIsDeleted(1);
+        productRepo.save(product.get());
+        return "product deleted successfully";
     }
 
 

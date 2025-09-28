@@ -6,10 +6,7 @@ import com.project.hammer.service.CategoryService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.project.hammer.constants.Constant.TRACKER;
 
@@ -29,7 +26,22 @@ public class CategoryController {
     public ResponseEntity<APIResponse> addNewCategory(@RequestParam(name = "categoryName") String categoryName,
                                                       HttpServletRequest httpServletRequest) {
         log.info("{}{}", TRACKER, httpServletRequest.getRemoteAddr());
-        return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS,categoryService.createNewCategory(categoryName)
+        return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS,categoryService.createNewCategory(categoryName),null
+        ));
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<APIResponse> deletecategory(@RequestParam(name = "categoryName") String categoryName,
+                                                      HttpServletRequest httpServletRequest) {
+        log.info("{}{}", TRACKER, httpServletRequest.getRemoteAddr());
+        return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS,categoryService.deleteCategroy(categoryName),null
+        ));
+    }
+
+    @PostMapping("/get/all")
+    public ResponseEntity<APIResponse> addNewCategory(HttpServletRequest httpServletRequest) {
+        log.info("{}{}", TRACKER, httpServletRequest.getRemoteAddr());
+        return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS,"Categories fetched successfully",categoryService.getAllCatogory()
         ));
     }
 }

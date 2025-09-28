@@ -8,6 +8,7 @@ class HammerApplicationTests {
 
 	@Test
 	void contextLoads() {
+
 	}
 
 }

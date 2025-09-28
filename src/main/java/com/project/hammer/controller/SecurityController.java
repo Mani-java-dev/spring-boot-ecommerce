@@ -27,7 +27,7 @@ public class SecurityController {
       public ResponseEntity<APIResponse> addNewUser(@RequestBody SignupModel signupModel,HttpServletRequest request ){
           log.info("{}{}",TRACKER, request.getRemoteAddr());
           securityService.createNewUserProfiler(signupModel);
-          return ResponseEntity.status(HttpStatus.OK).body(new APIResponse(SUCCESS,SIGNUP_SUCCESSFULL));
+          return ResponseEntity.status(HttpStatus.OK).body(new APIResponse(SUCCESS,SIGNUP_SUCCESSFULL,null));
       }
 
       @PostMapping("/login")

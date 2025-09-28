@@ -29,7 +29,7 @@ public class ProductController {
     public ResponseEntity<APIResponse> addNewProduct(@RequestBody NewProductModel newProductModel,
                                                      HttpServletRequest httpServletRequest) throws IOException {
         log.info("{}{}", TRACKER, httpServletRequest.getRemoteAddr());
-        return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS, productService.createNewProduct(newProductModel)));
+        return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS, productService.createNewProduct(newProductModel),null));
     }
 
     @GetMapping("/get/all")
@@ -40,12 +40,17 @@ public class ProductController {
 
     @PutMapping("/update")
     public ResponseEntity<APIResponse> updateExistingProduct(@RequestBody NewProductModel newProductModel,
-                                                     HttpServletRequest httpServletRequest) throws IOException {
+                                                             HttpServletRequest httpServletRequest) throws IOException {
         log.info("{}{}", TRACKER, httpServletRequest.getRemoteAddr());
-        return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS, productService.updateProduct(newProductModel)));
+        return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS, productService.updateProduct(newProductModel),null));
     }
 
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<APIResponse> deleteProducts(@RequestParam(name = "productId") String productId, HttpServletRequest request) {
+        log.info("{}{}", TRACKER, request.getRemoteAddr());
+        return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS, productService.deleteProduct(productId),null));
+    }
 
 
 }
