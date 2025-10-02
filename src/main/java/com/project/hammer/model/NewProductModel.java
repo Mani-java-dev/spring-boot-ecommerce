@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class NewProductModel {
+
+    private String productId;
+
     private String productName;
 
     private Integer price;

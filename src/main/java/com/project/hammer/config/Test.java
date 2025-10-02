@@ -10,7 +10,12 @@ public class Test {
 
     @PostConstruct
     public String fireAndForget(){
-        log.info("working............");
-        return "application working...";
+        log.info("###############-WORKING-###############");
+        log.info("#                                     #");
+        log.info("#             ECOM WORKING            #");
+        log.info("#                                     #");
+        log.info("#######################################");
+        return "";
     }
+
 }

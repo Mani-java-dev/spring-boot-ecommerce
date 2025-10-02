@@ -8,6 +8,13 @@ import com.project.hammer.model.ProductResponse;
 import com.project.hammer.repository.CategoryRepo;
 import com.project.hammer.repository.ProductRepo;
 import com.project.hammer.service.ProductService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,11 +27,16 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepo productRepo;
     private final CategoryRepo categoryRepo;
+
+
+    @Autowired
+    private CacheManager cacheManager;
 
     public ProductServiceImpl(
             ProductRepo productRepo,
@@ -38,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public String createNewProduct(NewProductModel productModel){
             Integer isExist=productRepo.findProductNameIsExist(productModel.getProductName());
-            if(isExist>0){
+            if(Objects.nonNull(isExist)&&isExist>0){
                 throw new BadRequestCustomException("Product already exist please give different name");
             }
             Product newProduct = new Product();
@@ -53,13 +65,19 @@ public class ProductServiceImpl implements ProductService {
                         .orElseThrow(() -> new BadRequestCustomException("Category not found")));
             fetchedCategory.ifPresent(newProduct::setCategory);
             productRepo.save(newProduct);
+            Cache cache=cacheManager.getCache("products");
+            cache.clear();
+            log.info(String.valueOf(cache.getNativeCache().getClass()));
             return "product added successfully";
     }
 
     @Override
     @Transactional
+    @Cacheable(value = "products", key = "'all'")
     public List<ProductResponse> getAllProducts() {
         List<Product> allProducts= productRepo.getAllProducts();
+        log.info("fetch from db");
+        System.err.println(cacheManager.getClass());
         return allProducts.stream().map(
                 product -> ProductResponse
                 .builder()
@@ -88,7 +106,8 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(newProductModel.getPrice());
         product.setImage(newProductModel.getImageLink());
         productRepo.save(product);
-
+        Cache cache=cacheManager.getCache("products");
+        cache.clear();
         return "Product updated successfully";
     }
 
@@ -100,6 +119,8 @@ public class ProductServiceImpl implements ProductService {
         }
         product.get().setIsDeleted(1);
         productRepo.save(product.get());
+        Cache cache=cacheManager.getCache("products");
+        cache.clear();
         return "product deleted successfully";
     }
 
