@@ -1,6 +1,7 @@
 package com.project.hammer.config;
 
 
+import com.project.hammer.entity.Users;
 import com.project.hammer.model.LoginModel;
 import com.project.hammer.repository.UserRepo;
 import io.jsonwebtoken.Claims;
@@ -23,14 +24,19 @@ public class JwtUtility{
     @Autowired
     UserRepo repo;
 
+
+    @Autowired
+    private RequestedUserInfo requestedUserInfo;
+
     public Map<String,String> generateJWt(LoginModel value)
     {
         Map<String, Object> claims = new HashMap<>();
-        String name= repo.findByGmail(value.getGmail()).getName();
-        claims.put("user",name);
+        Users users= repo.findByGmail(value.getGmail());
+        claims.put("user",users.getName());
+        claims.put("role",users.getRole());
         String key=Jwts.builder()
                 .setClaims(claims)
-                .setSubject(value.getGmail().toString())
+                .setSubject(value.getGmail())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256,secret)
@@ -65,7 +71,10 @@ public class JwtUtility{
     }
 
     public Boolean validateToken(String token, String usernames) {
-        final String username = extractUsername(token);
+        Claims claims=extractAllClaims(token);
+        requestedUserInfo.setUserName(claims.get("user").toString());
+        requestedUserInfo.setGmailAddress(claims.getSubject());
+        requestedUserInfo.setRole("ROLE_"+claims.get("role").toString().toUpperCase());
         return !isTokenExpired(token);
     }
 

@@ -20,4 +20,5 @@ public class Category {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Product> product;
+    //if you are using casecade type all if i delete category it also delete products
 }

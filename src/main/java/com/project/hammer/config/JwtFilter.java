@@ -24,6 +24,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
+
     @Autowired
     private JwtUtility jwtUtil;
 
@@ -63,7 +64,7 @@ public class JwtFilter extends OncePerRequestFilter {
             // if token is valid configure Spring Security to manually set authentication
             if (jwtUtil.validateToken(token, userDetails.getUsername())) {
 
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
@@ -76,4 +77,6 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
 
     }
+
+
 }

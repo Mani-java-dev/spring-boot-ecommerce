@@ -1,4 +1,30 @@
 package com.project.hammer.controller;
 
+import com.project.hammer.constants.APIResponse;
+import com.project.hammer.service.OrderService;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import static com.project.hammer.constants.Constant.SUCCESS;
+import static com.project.hammer.constants.Constant.TRACKER;
+
+@RestController
+@RequestMapping("/order")
+@Slf4j
 public class OrdersController {
+
+    @Autowired
+    private OrderService orderService;
+
+    @PostMapping("/add")
+    public ResponseEntity<APIResponse> addNewOrder(String product, HttpServletRequest httpServletRequest){
+        String response=orderService.addNewOrder(product);
+        log.info("{}{}", TRACKER, httpServletRequest.getRemoteAddr());
+        return ResponseEntity.ok().body(new APIResponse(SUCCESS,response,null));
+    }
 }
