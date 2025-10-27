@@ -26,7 +26,7 @@ public class CartItems {
     private String productId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "card_id")
+    @JoinColumn(name = "cart_id")
     private Cart cart;
 
     @Column(name = "quantity")

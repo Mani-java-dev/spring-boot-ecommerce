@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Integer> {
 
-    @Query(value = "SELECT * FROM cart WHERE card_name = :cardName", nativeQuery = true)
+    @Query(value = "SELECT * FROM cart WHERE cart_name = :cardName", nativeQuery = true)
     Cart getCartByUserName(@Param("cardName") String usernamePlusCard);
 }

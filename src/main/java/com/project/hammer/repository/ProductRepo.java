@@ -1,6 +1,7 @@
 package com.project.hammer.repository;
 
 import com.project.hammer.entity.Product;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,6 +22,9 @@ public interface ProductRepo extends JpaRepository<Product,Integer> {
 
     @Query(value = "SELECT * FROM products WHERE is_deleted=0",nativeQuery = true)
     List<Product> getAllProducts();
+
+    @Query(value = "SELECT * FROM products WHERE is_deleted=0 and product_id in :productIds",nativeQuery = true)
+    List<Product> getProductsByIds(@Param("productIds")List<String> productId);
 
     @Query(value = "SELECT * FROM products WHERE product_id = :productId AND is_deleted=0",nativeQuery = true)
     Product findProductByProductName(@Param("productId")String productId);

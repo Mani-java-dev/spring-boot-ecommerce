@@ -16,8 +16,8 @@ public class Orders {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "order_name")
-    private String orderName;
+    @Column(name = "order_id")
+    private String orderId;
 
     @Column(name = "ordered_at")
     private Long orderedAt;
@@ -30,6 +30,12 @@ public class Orders {
 
     @Column(name = "is_paid")
     private Integer isPaid;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "contact_number")
+    private String contactNumber;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
