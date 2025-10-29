@@ -33,6 +33,8 @@ public class RolePreloadConfig implements ApplicationRunner {
                 roleRepo.saveAll(roles);
                 log.info("All roles saved successfully");
         }
+
+        roleRepo.saveAll(roles);
         log.info("Roles are already preloaded !");
     }
 }
