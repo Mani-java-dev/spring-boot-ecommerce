@@ -77,23 +77,20 @@ public class OrderServiceImpl implements OrderService {
         if(Objects.isNull(order)){
             throw new BadRequestCustomException("Order not found !");
         }
-        List<ShowOrders> orderDetails=order.parallelStream().map(n->{
+        List<ShowOrders> orderDetails=order.stream().map(n->{
             ShowOrders orderDetail=new ShowOrders();
             orderDetail.setOrderId(n.getOrderId());
             orderDetail.setIsPaid(n.getIsPaid()==1?"Yes":"No");
             orderDetail.setOrderedTime(n.getOrderedAt());
             orderDetail.setPaymentType(n.getPayMethod());
-            List<OrderDetails> productDetails=new ArrayList<>();
-            for(Product product:n.getProducts()){
-                OrderDetails products=new OrderDetails();
-                products.setProductName(product.getProductName());
-                products.setDescription(product.getDescription());
-                products.setPrice(product.getPrice());
-                products.setImage(product.getImage());
-                products.setCategory(product.getCategory().getCategoryName());
-                products.setProductId(product.getProductId());
-                productDetails.add(products);
-            }
+            List<OrderDetails> productDetails=n.getProducts()
+                    .stream()
+                    .map(n2->new OrderDetails(n2.getProductId(),
+                            n2.getProductName(),
+                            n2.getPrice(),
+                            n2.getDescription(),
+                            n2.getImage(),
+                            n2.getCategory().getCategoryName())).toList();
             orderDetail.setOrderProducts(productDetails);
             return orderDetail;
         }).toList();
