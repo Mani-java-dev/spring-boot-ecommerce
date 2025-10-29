@@ -1,0 +1,8 @@
+version: "3"
+services:
+  ecom:
+    image: ecom
+    ports:
+      - "8081:8080"
+    env_file:
+      - .env
