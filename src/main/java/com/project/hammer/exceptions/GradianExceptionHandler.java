@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.AccessDeniedException;
+
 @RestControllerAdvice
 public class GradianExceptionHandler {
 
@@ -15,4 +17,5 @@ public class GradianExceptionHandler {
          response.setMessage(e.getMessage());
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
 }

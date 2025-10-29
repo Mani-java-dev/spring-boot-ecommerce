@@ -1,5 +1,6 @@
 package com.project.hammer.config;
 
+import com.project.hammer.exceptions.BadRequestCustomException;
 import com.project.hammer.serviceimpl.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -51,15 +52,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
         } else {
             log.info("token not found");
-//            throw new BadRequestCustomException("Token not found !");
         }
 
         // Once we get the token, validate it
         if (Objects.nonNull(userName) && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
-
-            log.info(userDetails.toString());
 
             // if token is valid configure Spring Security to manually set authentication
             if (jwtUtil.validateToken(token, userDetails.getUsername())) {
@@ -68,12 +66,12 @@ public class JwtFilter extends OncePerRequestFilter {
                 usernamePasswordAuthenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                log.info(usernamePasswordAuthenticationToken.toString());
-
                 // After setting the Authentication in the context, we specify that the current user is authenticated
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
+
+        //passing request and response to antoher filter or controller
         filterChain.doFilter(request, response);
 
     }

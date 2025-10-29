@@ -34,6 +34,12 @@ public class SecurityConfig {
     @Autowired
     private JwtFilter jwtFilter;
 
+    @Autowired
+    private RequestLoggingFilter requestLoggingFilter;
+
+    @Autowired
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
+
     public final static String[] WHITELISTENDPOINTS = {
             "/v3/api-docs/**",
             "/swagger-ui.html",
@@ -46,13 +52,16 @@ public class SecurityConfig {
 
     public final String[] USERENDPOINTS = {
             "/products/get/all",
-            "/products/update"
+            "/cart/**",
+            "/category/get/all"
     };
 
     public final String[] SUPERADMINENDPOINTS = {
             "/products/**",
-            "/category/",
-            "/hammer/v1/api/all/users",
+            "/category/**",
+            "/order/**",
+            "/cart/**",
+            "/hammer/v1/api/all/users/**",
     };
 
     @Bean
@@ -62,11 +71,15 @@ public class SecurityConfig {
                         request.requestMatchers(WHITELISTENDPOINTS).permitAll()
                                 .requestMatchers(SUPERADMINENDPOINTS).hasRole("ADMIN")
                                 .requestMatchers(USERENDPOINTS).hasRole("USER")
-                                .anyRequest().authenticated()
+                                .anyRequest().denyAll()
                 )
+                .exceptionHandling(ex->
+                        ex.accessDeniedHandler(customAccessDeniedHandler))
                 .sessionManagement(sesssion ->
                         sesssion.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity
+                .addFilterBefore(requestLoggingFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 
