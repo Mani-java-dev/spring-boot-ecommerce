@@ -21,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Users user = userRepository.findByGmail(username);
+        Users user = userRepository.getGmailForUser(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }

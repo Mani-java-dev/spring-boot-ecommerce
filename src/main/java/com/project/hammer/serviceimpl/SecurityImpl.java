@@ -11,7 +11,6 @@ import com.project.hammer.model.UsersDetails;
 import com.project.hammer.repository.RoleRepo;
 import com.project.hammer.repository.UserRepo;
 import com.project.hammer.service.SecurityService;
-import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,14 +18,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.project.hammer.constants.Constant.ACTIVE;
 
@@ -54,7 +49,7 @@ public class SecurityImpl implements SecurityService {
         if(Objects.isNull(signupModel.getGmail())){
             throw new BadRequestCustomException("Gmail shouldn't be empty");
         }
-        Users checkIsExist=userRepo.findByGmail(signupModel.getGmail());
+        Users checkIsExist=userRepo.getGmailForUser(signupModel.getGmail());
 
         if(Objects.isNull(checkIsExist)){
             Users createNewUser=new Users();
@@ -76,7 +71,7 @@ public class SecurityImpl implements SecurityService {
     @Override
     public Map<String, String> loginUser(LoginModel loginModel) {
 
-        Users user = userRepo.findByGmail(loginModel.getGmail());
+        Users user = userRepo.getGmailForUser(loginModel.getGmail());
 
         if(Objects.isNull(user)){
             throw new BadRequestCustomException("User not found ");
@@ -130,7 +125,7 @@ public class SecurityImpl implements SecurityService {
                 ||Objects.isNull(updateMode.getRoleElevation())){
             throw new BadRequestCustomException("user details shouldn't be empty");
         }
-        Users user=userRepo.findByGmail(updateMode.getGmail());
+        Users user=userRepo.getGmailForUser(updateMode.getGmail());
         Optional<Role> role=roleRepo.findById(updateMode.getRoleElevation().longValue());
         if(role.isPresent()) {
             user.setRole(role.get());
@@ -146,7 +141,7 @@ public class SecurityImpl implements SecurityService {
         if(Objects.isNull(userId)||userId.isEmpty()){
             throw new BadRequestCustomException("User id shouldn't be empty");
         }
-        Users user=userRepo.findByGmail(userId);
+        Users user=userRepo.getGmailForUser(userId);
          if(Objects.isNull(user)){
              throw new BadRequestCustomException("User not found");
          }

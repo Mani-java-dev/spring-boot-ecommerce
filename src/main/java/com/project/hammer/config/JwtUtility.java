@@ -31,7 +31,7 @@ public class JwtUtility{
     public Map<String,String> generateJWt(LoginModel value)
     {
         Map<String, Object> claims = new HashMap<>();
-        Users users= repo.findByGmail(value.getGmail());
+        Users users= repo.getGmailForUser(value.getGmail());
         claims.put("user",users.getName());
         claims.put("role",users.getRole());
         String key=Jwts.builder()

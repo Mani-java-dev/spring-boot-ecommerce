@@ -13,7 +13,8 @@ public interface UserRepo extends JpaRepository<Users, Integer> {
 
     List<Users> findByName(String name);
 
-    Users findByGmail(String gmail);
+    @Query(value = "SELECT * FROM users WHERE gmail = :gmail AND active_status='ACTIVE'",nativeQuery = true)
+    Users getGmailForUser(@Param("gmail") String gmail);
 
     @Query(value = "select * from users",nativeQuery = true)
     List<Users> getAllUsers();
