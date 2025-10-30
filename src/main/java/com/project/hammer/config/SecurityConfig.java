@@ -64,7 +64,7 @@ public class SecurityConfig {
             "/products/delete",
             "/category/add",
             "/category/delete",
-            "/hammer/v1/api/user/all/users",
+            "/hammer/v1/api/all/users",
             "/hammer/v1/api/user/deactivate",
             "/hammer/v1/api/user/elevate"
     };
