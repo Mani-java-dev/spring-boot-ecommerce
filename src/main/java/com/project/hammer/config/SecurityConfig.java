@@ -53,15 +53,20 @@ public class SecurityConfig {
     public final String[] USERENDPOINTS = {
             "/products/get/all",
             "/cart/**",
+            "/order/add",
+            "/order/myorder",
             "/category/get/all"
     };
 
     public final String[] SUPERADMINENDPOINTS = {
-            "/products/**",
-            "/category/**",
-            "/order/**",
-            "/cart/**",
-            "/hammer/v1/api/all/users/**",
+            "/products/add",
+            "/products/update",
+            "/products/delete",
+            "/category/add",
+            "/category/delete",
+            "/hammer/v1/api/all/users/all/users",
+            "/hammer/v1/api/user/deactivate",
+            "/hammer/v1/api/user/elevate"
     };
 
     @Bean
@@ -69,8 +74,8 @@ public class SecurityConfig {
         httpSecurity.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(WHITELISTENDPOINTS).permitAll()
-                                .requestMatchers(SUPERADMINENDPOINTS).hasRole("ADMIN")
                                 .requestMatchers(USERENDPOINTS).hasRole("USER")
+                                .requestMatchers(SUPERADMINENDPOINTS).hasRole("ADMIN")
                                 .anyRequest().denyAll()
                 )
                 .exceptionHandling(ex->
