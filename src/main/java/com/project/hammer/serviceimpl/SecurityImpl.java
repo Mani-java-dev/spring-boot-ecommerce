@@ -4,10 +4,7 @@ import com.project.hammer.config.JwtUtility;
 import com.project.hammer.entity.Role;
 import com.project.hammer.entity.Users;
 import com.project.hammer.exceptions.BadRequestCustomException;
-import com.project.hammer.model.LoginModel;
-import com.project.hammer.model.RequestUserInfo;
-import com.project.hammer.model.SignupModel;
-import com.project.hammer.model.UsersDetails;
+import com.project.hammer.model.*;
 import com.project.hammer.repository.RoleRepo;
 import com.project.hammer.repository.UserRepo;
 import com.project.hammer.service.SecurityService;
@@ -69,7 +66,7 @@ public class SecurityImpl implements SecurityService {
     }
 
     @Override
-    public Map<String, String> loginUser(LoginModel loginModel) {
+    public LoginResponse loginUser(LoginModel loginModel) {
 
         Users user = userRepo.getGmailForUser(loginModel.getGmail());
 
@@ -98,7 +95,13 @@ public class SecurityImpl implements SecurityService {
 
         Map<String, String> token = jwtUtility.generateJWt(loginModel);
         Authentication role= SecurityContextHolder.getContext().getAuthentication();
-        return token;
+        LoginResponse response=new LoginResponse()
+                .builder()
+                .userName(user.getName())
+                .token(token.get("accessToken"))
+                .role(user.getRole().getRole())
+                .build();
+        return response;
     }
 
     @Override

@@ -1,9 +1,6 @@
 package com.project.hammer.service;
 
-import com.project.hammer.model.LoginModel;
-import com.project.hammer.model.RequestUserInfo;
-import com.project.hammer.model.SignupModel;
-import com.project.hammer.model.UsersDetails;
+import com.project.hammer.model.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +11,7 @@ public interface SecurityService {
 
     void createNewUserProfiler(SignupModel signupModel);
 
-    Map<String, String> loginUser(LoginModel loginModel);
+    LoginResponse loginUser(LoginModel loginModel);
 
     List<UsersDetails> getAllUsers();
 
