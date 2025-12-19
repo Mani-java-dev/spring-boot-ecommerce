@@ -60,6 +60,9 @@ public class OrderServiceImpl implements OrderService {
         order.setContactNumber(product.getContactNumber());
         order.setOrderedAt(Instant.now().getEpochSecond());
         order.setPayMethod(product.getPaymentMethod());
+        if(Objects.isNull(product.getOrderId())||product.getOrderId().isEmpty()){
+            throw new BadRequestCustomException("order id should not be empty");
+        }
         List<Product> productList=productRepo.getProductsByIds(product.getOrderId());
         order.setProducts(productList);
 
