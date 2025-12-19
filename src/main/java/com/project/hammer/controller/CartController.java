@@ -27,21 +27,18 @@ public class CartController {
     @PostMapping("/add")
     public ResponseEntity<APIResponse> addNewCart(String product,HttpServletRequest httpServletRequest){
         String response=cartService.createCart(product);
-        log.info("{}{}", TRACKER, httpServletRequest.getRemoteAddr());
         return ResponseEntity.ok().body(new APIResponse(SUCCESS,response,null));
     }
 
     @GetMapping("/get")
     public ResponseEntity<APIResponse> getCartForUser(HttpServletRequest httpServletRequest){
         Map<String,Integer> cart=cartService.getCartForUser();
-        log.info("{}{}", TRACKER, httpServletRequest.getRemoteAddr());
         return ResponseEntity.ok().body(new APIResponse(SUCCESS,"Cart fetched successfully",cart));
     }
 
     @DeleteMapping("/remove")
     public ResponseEntity<APIResponse> removeItemFromCart(String productId,HttpServletRequest httpServletRequest){
         String response=cartService.removeItemFromCart(productId);
-        log.info("{}{}", TRACKER, httpServletRequest.getRemoteAddr());
         return ResponseEntity.ok().body(new APIResponse(SUCCESS,response,null));
     }
 

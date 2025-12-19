@@ -25,7 +25,6 @@ public class CategoryController {
     @PostMapping("/add")
     public ResponseEntity<APIResponse> addNewCategory(@RequestParam(name = "categoryName") String categoryName,
                                                       HttpServletRequest httpServletRequest) {
-        log.info("{}{}", TRACKER, httpServletRequest.getRemoteAddr());
         return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS,categoryService.createNewCategory(categoryName),null
         ));
     }
@@ -33,14 +32,12 @@ public class CategoryController {
     @DeleteMapping("/delete")
     public ResponseEntity<APIResponse> deletecategory(@RequestParam(name = "categoryName") String categoryName,
                                                       HttpServletRequest httpServletRequest) {
-        log.info("{}{}", TRACKER, httpServletRequest.getRemoteAddr());
         return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS,categoryService.deleteCategroy(categoryName),null
         ));
     }
 
     @PostMapping("/get/all")
     public ResponseEntity<APIResponse> addNewCategory(HttpServletRequest httpServletRequest) {
-        log.info("{}{}", TRACKER, httpServletRequest.getRemoteAddr());
         return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS,"Categories fetched successfully",categoryService.getAllCatogory()
         ));
     }

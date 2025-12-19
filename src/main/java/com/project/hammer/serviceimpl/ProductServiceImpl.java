@@ -77,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductResponse> getAllProducts() {
         List<Product> allProducts= productRepo.getAllProducts();
         log.info("fetch from db");
-        System.err.println(cacheManager.getClass());
+        log.info("Cache information {}",cacheManager.getClass().toString());
         return allProducts.stream().map(
                 product -> ProductResponse
                 .builder()

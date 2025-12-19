@@ -28,27 +28,23 @@ public class ProductController {
     @PostMapping("/add")
     public ResponseEntity<APIResponse> addNewProduct(@RequestBody NewProductModel newProductModel,
                                                      HttpServletRequest httpServletRequest) throws IOException {
-        log.info("{}{}", TRACKER, httpServletRequest.getRemoteAddr());
         return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS, productService.createNewProduct(newProductModel),null));
     }
 
     @GetMapping("/get/all")
     public ResponseEntity<APIResponse> getProduct(HttpServletRequest httpServletRequest) {
-        log.info("{}{}", TRACKER, httpServletRequest.getRemoteAddr());
         return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS, "product fetched successfully", productService.getAllProducts()));
     }
 
     @PutMapping("/update")
     public ResponseEntity<APIResponse> updateExistingProduct(@RequestBody NewProductModel newProductModel,
                                                              HttpServletRequest httpServletRequest) throws IOException {
-        log.info("{}{}", TRACKER, httpServletRequest.getRemoteAddr());
         return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS, productService.updateProduct(newProductModel),null));
     }
 
 
     @DeleteMapping("/delete")
     public ResponseEntity<APIResponse> deleteProducts(@RequestParam(name = "productId") String productId, HttpServletRequest request) {
-        log.info("{}{}", TRACKER, request.getRemoteAddr());
         return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS, productService.deleteProduct(productId),null));
     }
 

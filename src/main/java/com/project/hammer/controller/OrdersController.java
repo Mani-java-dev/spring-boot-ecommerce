@@ -27,14 +27,12 @@ public class OrdersController {
     @PostMapping("/add")
     public ResponseEntity<APIResponse> addNewOrder(@RequestBody MakeOrder product, HttpServletRequest httpServletRequest){
         String response=orderService.addNewOrder(product);
-        log.info("{}{}", TRACKER, httpServletRequest.getRemoteAddr());
         return ResponseEntity.ok().body(new APIResponse(SUCCESS,response,null));
     }
 
     @GetMapping("/myorder")
     public ResponseEntity<APIResponse> addNewOrder(HttpServletRequest httpServletRequest){
         List<ShowOrders> response=orderService.getMyOrders();
-        log.info("{}{}", TRACKER, httpServletRequest.getRemoteAddr());
         return ResponseEntity.ok().body(new APIResponse(SUCCESS,"your orders",response));
     }
 
