@@ -47,6 +47,9 @@ public class SecurityImpl implements SecurityService {
             throw new BadRequestCustomException("Gmail shouldn't be empty");
         }
         Users checkIsExist=userRepo.getGmailForUser(signupModel.getGmail());
+        boolean isRootUser=false;
+        List<Users> isRootUserCheck=userRepo.getAllUsers();
+        isRootUser=Objects.isNull(isRootUserCheck)||isRootUserCheck.isEmpty();
 
         if(Objects.isNull(checkIsExist)){
             Users createNewUser=new Users();
@@ -55,7 +58,7 @@ public class SecurityImpl implements SecurityService {
             createNewUser.setPassword(passwordEncoder.encode(signupModel.getPassword()));
             createNewUser.setConfirmPassword(passwordEncoder.encode(signupModel.getConfirmPassword()));
             createNewUser.setPhoneNumber(signupModel.getMobileNumber());
-            createNewUser.setRole(roleRepo.findById(1L).get());
+            createNewUser.setRole(roleRepo.findById(isRootUser?2L:1L).get());
             createNewUser.setActiveStatus(ACTIVE);
 
             userRepo.save(createNewUser);
