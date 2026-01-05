@@ -31,7 +31,7 @@ public class ProductController {
         return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS, productService.createNewProduct(newProductModel),null));
     }
 
-    @GetMapping("/get/all")
+    @GetMapping(value = "/get/all")
     public ResponseEntity<APIResponse> getProduct(HttpServletRequest httpServletRequest) {
         return ResponseEntity.ok().body(new APIResponse(Constant.SUCCESS, "product fetched successfully", productService.getAllProducts()));
     }

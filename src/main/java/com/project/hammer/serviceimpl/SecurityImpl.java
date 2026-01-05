@@ -1,6 +1,7 @@
 package com.project.hammer.serviceimpl;
 
 import com.project.hammer.config.JwtUtility;
+import com.project.hammer.config.RequestedUserInfo;
 import com.project.hammer.entity.Role;
 import com.project.hammer.entity.Users;
 import com.project.hammer.exceptions.BadRequestCustomException;
@@ -18,7 +19,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.project.hammer.constants.Constant.ACTIVE;
 
@@ -34,6 +40,10 @@ public class SecurityImpl implements SecurityService {
 
     @Autowired
     private JwtUtility jwtUtility;
+
+    @Autowired
+    private RequestedUserInfo requestedUserInfo;
+
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -109,7 +119,7 @@ public class SecurityImpl implements SecurityService {
 
     @Override
     public List<UsersDetails> getAllUsers() {
-        List<Users> usersList=userRepo.getAllUsers();
+        List<Users> usersList=userRepo.getAllUsersExcludeLoginUser(requestedUserInfo.getGmailAddress().trim());
         if(Objects.isNull(usersList)||usersList.isEmpty()){
             log.info("Users details not found !");
             throw new BadRequestCustomException("Users details not found !");
@@ -132,11 +142,12 @@ public class SecurityImpl implements SecurityService {
             throw new BadRequestCustomException("user details shouldn't be empty");
         }
         Users user=userRepo.getGmailForUser(updateMode.getGmail());
-        Optional<Role> role=roleRepo.findById(updateMode.getRoleElevation().longValue());
-        if(role.isPresent()) {
-            user.setRole(role.get());
+        List<Role> roleList=roleRepo.getAllRoles();
+        Map<String,Role> lookpu=roleList.stream().collect(Collectors.toMap(Role::getRole, Function.identity()));
+        if (user.getRole().getRole().equals("admin")) {
+            user.setRole(lookpu.get("user"));
         }else{
-            throw new BadRequestCustomException("Role not found !");
+            user.setRole(lookpu.get("admin"));
         }
         userRepo.save(user);
         return "Role updated successfully";
@@ -147,7 +158,7 @@ public class SecurityImpl implements SecurityService {
         if(Objects.isNull(userId)||userId.isEmpty()){
             throw new BadRequestCustomException("User id shouldn't be empty");
         }
-        Users user=userRepo.getGmailForUser(userId);
+        Users user=userRepo.getGmailForUserForAct(userId.trim());
          if(Objects.isNull(user)){
              throw new BadRequestCustomException("User not found");
          }

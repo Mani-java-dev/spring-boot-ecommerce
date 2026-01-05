@@ -55,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
             }
             Product newProduct = new Product();
             newProduct.setProductId(UUID.randomUUID().toString());
-            newProduct.setProductName(productModel.getProductName());
+            newProduct.setProductName(productModel.getProductName().trim());
             newProduct.setDescription(productModel.getDescription());
             newProduct.setPrice(productModel.getPrice());
             newProduct.setIsActive(1);
@@ -97,8 +97,8 @@ public class ProductServiceImpl implements ProductService {
         if(Objects.isNull(newProductModel)){
             throw new BadRequestCustomException("Products details shouldn't be empty");
         }
-
-        Product product=productRepo.findProductByProductName(newProductModel.getProductName());
+        String prod=newProductModel.getProductId().trim();
+        Product product=productRepo.findProductByProductName(prod);
         if(Objects.isNull(product)){
             throw new BadRequestCustomException("Product doesn't exist");
         }

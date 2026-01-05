@@ -16,8 +16,14 @@ public interface UserRepo extends JpaRepository<Users, Integer> {
     @Query(value = "SELECT * FROM users WHERE gmail = :gmail AND active_status='ACTIVE'",nativeQuery = true)
     Users getGmailForUser(@Param("gmail") String gmail);
 
+    @Query(value = "SELECT * FROM users WHERE gmail = :gmail",nativeQuery = true)
+    Users getGmailForUserForAct(@Param("gmail") String gmail);
+
     @Query(value = "select * from users",nativeQuery = true)
     List<Users> getAllUsers();
+
+    @Query(value = "select * from users where gmail != :gmail",nativeQuery = true)
+    List<Users> getAllUsersExcludeLoginUser(@Param("gmail")String gmail);
 
     @Query(value = "SELECT * FROM users WHERE name = :userName",nativeQuery = true)
     Users getUserByUserName(@Param("userName")String userName);
